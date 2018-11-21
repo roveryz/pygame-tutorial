@@ -1,23 +1,33 @@
+# 1 import
 import pygame 
 from pygame.locals import *
 
-# initialize the game
+# 2 initialize the game
 pygame.init()
 width, height = 640,480
 screen = pygame.display.set_mode((width,height))
 
-# load images
+# 3 load images
 player = pygame.image.load("resources/images/dude.png")
+grass = pygame.image.load("resources/images/grass.png")
+castle = pygame.image.load("resources/images/castle.png")
 
-# keep looping through
+# 4 keep looping through
 while 1:
-	# clear the screen before drawing it again
+	# 5 clear the screen before drawing it again
 	screen.fill(0)
-	# draw the screen elements
+	# 6 draw the screen elements
 	screen.blit(player, (100,100))
-	# update the screen 
+	for x in range(width/grass.get_width()+1):
+		for y in range(height/grass.get_height()+1):
+			screen.blit(grass,(x*100,y*100))
+	screen.blit(castle,(0,30))
+	screen.blit(castle,(0,135))
+	screen.blit(castle,(0,240))
+	screen.blit(castle,(0,345))
+	# 7 update the screen 
 	pygame.display.flip()
-	# loop through the events
+	# 8 loop through the events
 	for event in pygame.event.get():
 		# check if the event is the X button
 		if event.type==pygame.QUIT:
