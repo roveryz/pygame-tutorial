@@ -2,6 +2,7 @@
 import pygame 
 from pygame.locals import *
 import math
+import random
 
 # 2 initialize the game
 pygame.init()
@@ -14,6 +15,11 @@ acc=[0,0] # trace player's accuracy
 # this accuracy is a list of number
 # here record the arrows num and shotted enermies' num
 arrows=[] # trace arrow
+# enermies' list and a timer to create enermy
+badtimer = 100
+badtimer1 = 0
+badguys=[[640,100]]
+healthvalue=194
 
 # 3 load images
 player = pygame.image.load("resources/images/dude.png")
@@ -21,6 +27,8 @@ grass = pygame.image.load("resources/images/grass.png")
 castle = pygame.image.load("resources/images/castle.png")
 # load arrow's image
 arrow = pygame.image.load("resources/images/bullet.png")
+badguyimg1 = pygame.image.load("resources/images/badguy.png")
+badguyimg = badguyimg1
 
 # 4 keep looping through
 while 1:
@@ -45,7 +53,7 @@ while 1:
 	playerrot = pygame.transform.rotate(player, 360-angle*57.29) # where the 57.29 from???
 	playerpos1 = (playerpos[0]-playerrot.get_rect().width/2, playerpos[1]-playerrot.get_rect().height/2)
 	screen.blit(playerrot, playerpos1)	
-	# draw the arrow
+	# 6.2 draw the arrow
 	for bullet in arrows:
 		index=0
 		velx=math.cos(bullet[0])*10
@@ -58,7 +66,34 @@ while 1:
 		for projectile in arrows:
 			arrow1 = pygame.transform.rotate(arrow, 360-projectile[0]*57.29)
 			screen.blit(arrow1, (projectile[1], projectile[2]))
-	
+	# 6.3 Dray badguys
+	if badtimer == 0:
+		badguys.append([640, random.randint(50,430)])
+		badtimer=100-(badtimer1*2)
+		if badtimer1>=35:
+			badtimer1=35
+		else:
+			badtimer1+=5
+	index=0
+	# update enermy's x and check if out of screen
+	for badguy in badguys:
+		if badguy[0]<-64:
+			badguys.pop(index)
+		badguy[0]-=7
+		# 6.3.1 attack castle
+		badrect = pygame.Rect(badguyimg.get_rect())
+		badrect.top=badguy[1]
+		badrect.left=badguy[0]
+		if badrect.left<64:
+			healthvalue-=random.randint(5,20)
+			badguys.pop(index)
+		# 6.3.3 next bad guy
+		index+=1
+	# draw all enermy
+	for badguy in badguys:
+		screen.blit(badguyimg, badguy)
+			
+		
 	# 7 update the screen 
 	pygame.display.flip()
 	# 8 loop through the events
@@ -100,3 +135,4 @@ while 1:
 			playerpos[0]-=5
 		elif keys[3]:
 			playerpos[0]+=5
+	badtimer-=1
